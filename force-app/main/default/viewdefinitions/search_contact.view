@@ -1,0 +1,29 @@
+description: "View that triggers an apex block action."
+components:
+  - definition: modal
+    properties:
+      title: "Search Contact"
+      submitLabel: "Search"
+    events:
+      onsubmit:
+        # definition maps to 'ActionDispatcherSubmitRecord' apex class implementing Slack.ActionDispatcher
+        definition: "apex__action__ActionDispatcherSearchContact"
+    components:
+      - definition: input
+        properties:
+          label: "Name"  # label is the field label
+          required: true
+        components:
+          - definition: textInput
+            properties:
+              name: "Name"   # name should be FieldApiName
+              placeholder: "Name"
+      - definition: input
+        properties:
+          label: "Title"  # label is the field label
+          required: false
+        components:
+          - definition: textInput
+            properties:
+              name: "Title"   # name should be FieldApiName
+              placeholder: "Title"

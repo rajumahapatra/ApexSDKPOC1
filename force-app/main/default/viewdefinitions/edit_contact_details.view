@@ -1,0 +1,94 @@
+description: "View that edits a contact record by triggering an apex action on view submission."
+schema:
+  properties:
+    headerText:
+      type: string
+      defaultValue: "Edit Contact Details"
+    contactId:
+      type: string
+      required: true
+dataproviders:
+  contact:
+    definition: "apex__DataProviderSObjectRecord.getContactById"
+    properties:
+      recordId: "{!view.properties.contactId}"
+components:
+  - definition: modal
+    properties:
+      title: "Edit Contact"
+      submitLabel: "Save"
+    events:
+      onsubmit:
+        # definition maps to 'ActionDispatcherSubmitRecord' apex class implementing Slack.ActionDispatcher
+        definition: "apex__action__ActionDispatcherSaveContact"
+        properties:
+          contactId: "{!view.properties.contactId}"
+    components:
+      - definition: input
+        properties:
+          label: "First Name"
+          required: true
+        components:
+          - definition: textInput
+            properties:
+              name: "FirstName"
+              placeholder: "First Name"
+              value: "{!contact.FirstName}"
+      - definition: input
+        properties:
+          label: "Last Name"
+          required: true
+        components:
+          - definition: textInput
+            properties:
+              name: "LastName"
+              placeholder: "Last Name"
+              value: "{!contact.LastName}"
+      - definition: input
+        properties:
+          label: "Phone"
+          required: true
+        components:
+          - definition: textInput
+            properties:
+              name: "Phone"
+              placeholder: "(555) 555-5555"
+              value: "{!contact.Phone}"
+      - definition: input
+        properties:
+          label: "Email"
+          required: true
+        components:
+          - definition: textInput
+            properties:
+              name: "Email"
+              placeholder: "name@example.com"
+              value: "{!contact.Email}"
+      - definition: section
+        properties:
+          text:
+            type: "mrkdwn"
+            text: "*Account*"
+      - definition: actions
+        name: "external_select_accounts"
+        components:
+          - definition: externalSelect
+            properties:
+              placeholder: "Look up an account by name"
+              name: "account_lookup"
+              datasource:
+                # definition maps to 'DataProviderAccountLookup' apex class
+                definition: "apex__DataProviderAccountLookup.getAccountsByName"
+              value: "{!contact.Account.Name}"
+          - definition: button
+            properties:
+              label: "Create Account"
+              style: "primary"
+              name: "create_account"
+            events:
+              onclick:
+                # definition maps to 'ActionDispatcherCreateRecord' apex class implementing Slack.ActionDispatcher
+                definition: "apex__action__ActionDispatcherCreateRecord"
+                properties:
+                  objectApiName: "Account"
+                  pushModal: true

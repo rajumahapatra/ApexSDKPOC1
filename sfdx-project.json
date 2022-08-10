@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "ApexSDKPOC1",
+  "namespace": "",
+  "sfdcLoginUrl": "https://d5i000001xruweaq-dev-ed.my.salesforce.com",
+  "sourceApiVersion": "54.0"
+}

@@ -1,0 +1,69 @@
+description: "View that displays contacts"
+schema:
+  properties:
+    title:
+      type: string
+      defaultValue: "Avaialable Contacts"
+    name:
+      type: string
+      required: true
+    contactTitle:
+      type: string
+      required: false
+    channelId:
+      type: string
+      required: false
+dataproviders:
+  contacts:
+    definition: "apex__DataProviderSObjectRecord.getContact"
+    properties:
+      name: "{!view.properties.name}"
+      title: "{!view.properties.contactTitle}"
+components:
+  - definition: modal
+    properties:
+      title: "{!view.properties.title}"
+    components:
+      - definition: divider
+      - definition: iteration
+        properties:
+          foreach: '{!contacts}' # where 'contacts' references a value from a data provider
+          foritem: 'contact'
+        components:
+          - definition: section
+            properties:
+              fields:
+                - text: "*Name:* {!contact.Name}"
+                  type: mrkdwn
+                - text: "*Id:* <https://saas-innovation-1458-dev-ed.lightning.force.com/lightning/r/Contact/{!contact.Id}/view|{!contact.Id}>"
+                  type: mrkdwn
+                  disableEncoding: true
+                  verbatim: false
+                - text: "*Title:* {!contact.Title}"
+                  type: mrkdwn
+                - text: "*Phone:* {!contact.Phone}"
+                  type: mrkdwn
+                - text: "*Email:* {!contact.Email}"
+                  type: mrkdwn
+          - definition: actions
+            components:
+              - definition: button
+                properties:
+                  label: 'Post to Channel'
+                  style: 'primary'
+                  name: 'post_to_channel'            
+                events:
+                  onclick:
+                    definition: 'apex__action__ActionDispatcherPostContactDetails'
+                    properties: 
+                      contactId: '{!contact.Id}'
+              - definition: button
+                properties:
+                  label: 'Edit'
+                  name: 'edit'            
+                events:
+                  onclick:
+                    definition: 'apex__action__ActionDispatcherEditContactDetails'
+                    properties: 
+                      contactId: '{!contact.Id}'
+          - definition: divider

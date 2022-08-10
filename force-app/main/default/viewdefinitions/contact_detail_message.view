@@ -1,0 +1,43 @@
+description: "This component displays record details in a message"
+schema:
+  properties:
+    headerText:
+      type: string
+      defaultValue: "Contact Details"
+    contactId:
+      type: string
+      required: true
+dataproviders:
+  contact:
+    definition: "apex__DataProviderSObjectRecord.getContactById"
+    properties:
+      recordId: "{!view.properties.contactId}"
+components:
+  - definition: message
+    components:
+      - definition: header
+        properties:
+          text: "{!view.properties.headerText}"
+      - definition: divider
+      - definition: section
+        properties:
+          text:
+            text: "*Id:* {!contact.Id}"
+            type: mrkdwn
+      - definition: section
+        properties:
+          text:
+            text: "*Title:* {!contact.Title}"
+            type: mrkdwn
+      - definition: section
+        properties:
+          text:
+            text: "*Phone:* {!contact.Phone}"
+            type: mrkdwn
+      - definition: section
+        properties:
+          text:
+            text: "*Email:* {!contact.Email}"
+            type: mrkdwn
+      - definition: divider
+            

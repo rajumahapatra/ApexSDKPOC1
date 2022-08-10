@@ -1,0 +1,44 @@
+description: "View that displays an account"
+schema:
+  properties:
+    title:
+      type: string
+      defaultValue: "Search Account"
+    accountName:
+      type: string
+      required: true
+    channelId:
+      type: string
+      required: false
+dataproviders:
+  accounts:
+    definition: "apex__DataProviderSObjectRecord.getAccountByName"
+    properties:
+      accountName: "{!view.properties.accountName}"
+components:
+  - definition: modal
+    properties:
+      title: "{!view.properties.title}"
+      submitLabel: "Post to Channel"
+    events:
+      onsubmit:
+        definition: "apex__action__ActionDispatcherPostRecordDetailMessage"
+        properties:
+          objectApiName: "Account"
+          recordId: "{!view.properties.recordId}"
+          channelId: "{!view.properties.channelId}"
+    components:
+      - definition: iteration
+        properties:
+          foreach: '{!accounts}'
+          foritem: 'account'
+        components:
+          - definition: divider
+          - definition: section
+            properties:
+              text: "{!account.Name}"
+          - definition: section
+            properties:
+              text:
+                text: "*Id:* {!account.Id}"
+                type: mrkdwn
